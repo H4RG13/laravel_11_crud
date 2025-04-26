@@ -1,88 +1,63 @@
-@extends('layouts.app')
-@section('content')
-<div class="row justify-content-center mt-3">
- <div class="col-md-8">
- <div class="card">
- <div class="card-header">
- <div class="float-start">
- Add New Product
- </div>
- <div class="float-end">
- <a href="{{ route('products.index') }}" class="btn 
-btn-primary btn-sm">&larr; Back</a>
- </div>
- </div>
- <div class="card-body">
- <form action="{{ route('products.store') }}"
-method="post">
- @csrf
- <div class="mb-3 row">
- <label for="code" class="col-md-4 col-formlabel text-md-end text-start">Code</label>
- <div class="col-md-6">
- <input type="text" class="form-control 
-@error('code') is-invalid @enderror" id="code" name="code" value="{{ 
-old('code') }}">
- @error('code')
- <span class="text-danger">{{ $message 
-}}</span>
- @enderror
- </div>
- </div>
- <div class="mb-3 row">
- <label for="name" class="col-md-4 col-formlabel text-md-end text-start">Name</label>
- <div class="col-md-6">
- <input type="text" class="form-control 
-@error('name') is-invalid @enderror" id="name" name="name" value="{{ 
-old('name') }}">
- @error('name')
- <span class="text-danger">{{ $message 
-}}</span>
- @enderror
- </div>
- </div>
- <div class="mb-3 row">
- <label for="quantity" class="col-md-4 colform-label text-md-end text-start">Quantity</label>
- <div class="col-md-6">
- <input type="number" class="form-control 
-@error('quantity') is-invalid @enderror" id="quantity" name="quantity"
-value="{{ old('quantity') }}">
- @error('quantity')
- <span class="text-danger">{{ $message 
-}}</span>
- @enderror
- </div>
- </div>
- <div class="mb-3 row">
- <label for="price" class="col-md-4 col-formlabel text-md-end text-start">Price</label>
- <div class="col-md-6">
- <input type="number" step="0.01"
-class="form-control @error('price') is-invalid @enderror" id="price"
-name="price" value="{{ old('price') }}">
- @error('price')
- <span class="text-danger">{{ $message 
-}}</span>
- @enderror
- </div>
- </div>
- <div class="mb-3 row">
- <label for="description" class="col-md-4 colform-label text-md-end text-start">Description</label>
- <div class="col-md-6">
- <textarea class="form-control 
-@error('description') is-invalid @enderror" id="description"
-name="description">{{ old('description') }}</textarea>
- @error('description')
- <span class="text-danger">{{ $message 
-}}</span>
- @enderror
- </div>
- </div>
-<div class="mb-3 row">
- <input type="submit" class="col-md-3 offsetmd-5 btn btn-primary" value="Add Product">
- </div>
- </form>
- </div>
- </div>
- </div> 
-</div>
- 
-@endsection
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('products.index') }}">Products</a>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-item nav-link text-light me-3">Welcome, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-link text-light">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Add New Product</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('products.store') }}" method="POST">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="code" class="form-label">Product Code</label>
+                                <input type="text" name="code" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Product Name</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="number" name="quantity" class="form-control" min="0" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" name="price" class="form-control" min="0" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea name="description" class="form-control"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Save Product</button>
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

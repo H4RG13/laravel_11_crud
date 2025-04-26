@@ -1,66 +1,81 @@
-@extends('layouts.app')
-@section('content')
-<div class="row justify-content-center mt-3">
- <div class="col-md-12">
- @session('success')
- <div class="alert alert-success" role="alert">
- {{ $value }}
- </div>
- @endsession
- <div class="card">
- <div class="card-header">Product List</div>
- <div class="card-body">
- <a href="{{ route('products.create') }}" class="btn 
-btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Add New 
-Product</a>
- <table class="table table-striped table-bordered">
- <thead>
- <tr>
- <th scope="col">S#</th>
- <th scope="col">Code</th>
- <th scope="col">Name</th>
- <th scope="col">Quantity</th>
- <th scope="col">Price</th>
- <th scope="col">Action</th>
- </tr>
- </thead>
-<tbody>
- @forelse ($products as $product)
-<tr>
- <th scope="row">{{ $loop->iteration 
-}}</th>
- <td>{{ $product->code }}</td>
- <td>{{ $product->name }}</td>
- <td>{{ $product->quantity }}</td>
- <td>{{ $product->price }}</td>
- <td>
- <form action="{{ 
-route('products.destroy', $product->id) }}" method="post">
- @csrf
-@method('DELETE')
- <a href="{{ route('products.show', 
-$product->id) }}" class="btn btn-warning btn-sm"><i class="bi bieye"></i> Show</a>
- <a href="{{ route('products.edit', 
-$product->id) }}" class="btn btn-primary btn-sm"><i class="bi bipencil-square"></i> Edit</a> 
- <button type="submit" class="btn 
-btn-danger btn-sm" onclick="return confirm('Do you want to delete this 
-product?');"><i class="bi bi-trash"></i> Delete</button>
- </form>
- </td>
- </tr>
-@empty
- <td colspan="6">
- <span class="text-danger">
- <strong>No Product Found!</strong>
- </span>
- </td>
- @endforelse
- </tbody>
- </table>
- {{ $products->links() }}
- </div>
- </div>
- </div> 
-</div>
- 
-@endsection
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Products</a>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-item nav-link text-light me-3">Welcome, {{ Auth::user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-link text-light">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Products
+                            <a href="{{ route('products.create') }}" class="btn btn-primary float-end">Add Product</a>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($products as $product)
+                                    <tr>
+                                        <td>{{ $product->id }}</td>
+                                        <td>{{ $product->code }}</td>
+                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $product->quantity }}</td>
+                                        <td>${{ number_format($product->price, 2) }}</td>
+                                        <td>{{ $product->description }}</td>
+                                        <td>
+                                            <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm">View</a>
+                                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-success btn-sm">Edit</a>
+                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {{ $products->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
