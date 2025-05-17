@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 #[\Illuminate\Auth\Middleware\Authenticate]
 class ProductController extends Controller
@@ -48,7 +49,8 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/products', $imageName);
+            $image->storeAs('products', $imageName, 'public');
+            Log::info('Image stored at: ' . storage_path('app/public/products/' . $imageName));
             $data['image'] = 'products/' . $imageName;
         }
 
@@ -96,7 +98,8 @@ class ProductController extends Controller
             
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/products', $imageName);
+            $image->storeAs('products', $imageName, 'public');
+            Log::info('Image stored at: ' . storage_path('app/public/products/' . $imageName));
             $data['image'] = 'products/' . $imageName;
         }
 
