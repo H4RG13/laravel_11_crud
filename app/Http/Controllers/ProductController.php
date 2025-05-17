@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Support\Facades\Storage;
 
 #[\Illuminate\Auth\Middleware\Authenticate]
 class ProductController extends Controller
@@ -39,9 +40,19 @@ class ProductController extends Controller
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        Product::create($request->all());
+        $data = $request->all();
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/products', $imageName);
+            $data['image'] = 'products/' . $imageName;
+        }
+
+        Product::create($data);
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
@@ -72,9 +83,24 @@ class ProductController extends Controller
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $product->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image) {
+                Storage::delete('public/' . $product->image);
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/products', $imageName);
+            $data['image'] = 'products/' . $imageName;
+        }
+
+        $product->update($data);
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
@@ -83,6 +109,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product) : RedirectResponse
     {
+        // Delete image if exists
+        if ($product->image) {
+            Storage::delete('public/' . $product->image);
+        }
+        
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }

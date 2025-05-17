@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Product</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .product-image {
+            max-width: 300px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -28,6 +35,11 @@
                         <h4>Product Details</h4>
                     </div>
                     <div class="card-body">
+                        @if($product->image)
+                            <div class="mb-4 text-center">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="product-image img-thumbnail">
+                            </div>
+                        @endif
                         <div class="mb-3">
                             <label class="form-label"><strong>Product Code:</strong></label>
                             <p>{{ $product->code }}</p>

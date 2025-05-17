@@ -28,7 +28,7 @@
                         <h4>Add New Product</h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('products.store') }}" method="POST">
+                        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="code" class="form-label">Product Code</label>
@@ -49,6 +49,11 @@
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea name="description" class="form-control"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Product Image</label>
+                                <input type="file" name="image" class="form-control" accept="image/*">
+                                <small class="text-muted">Allowed formats: JPEG, PNG, JPG, GIF. Max size: 2MB</small>
                             </div>
                             <button type="submit" class="btn btn-primary">Save Product</button>
                             <a href="{{ route('products.index') }}" class="btn btn-secondary">Back</a>
